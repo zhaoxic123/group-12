@@ -1,0 +1,47 @@
+﻿@namespace Masa.Docs.Shared.Shared
+@inherits NextTickComponentBase
+
+<MNavigationDrawer Right="!RTL"
+                   App
+                   Class="default-toc py-6 pr-4"
+                   Clipped
+                   Floating
+                   Width="300">
+    <PrependContent>
+        <ErrorBoundary>
+            <ChildContent>
+                <GitHubIssues />
+            </ChildContent>
+            <ErrorContent>
+            </ErrorContent>
+        </ErrorBoundary>
+    </PrependContent>
+
+    <ChildContent>
+        @if (_toc.Any())
+        {
+            <div class="toc-content mb-2 ml-6">@I18n.T("Toc")</div>
+        }
+        <ul class="mb-6">
+            @foreach (var item in _toc)
+            {
+                var hash = $"#{item.Anchor}";
+
+                <li class="pl-3 text-body-2 py-1 font-weight-regular @GenClass(item) toc-li">
+                    <a href="@hash"
+                       class="m-toc-link d-block transition-swing text-decoration-none"
+                       @onclick:preventDefault
+                       @onclick="@(() => ScrollIntoView(hash))">
+                        @item.Content
+                        @if (item.Attrs.ContainsKey("released-on"))
+                        {
+                            <MIcon Color="@AppService.ColorForUpdateState" Small>mdi-circle-medium</MIcon>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+        <Sponsors />
+        <Contact />
+    </ChildContent>
+</MNavigationDrawer>

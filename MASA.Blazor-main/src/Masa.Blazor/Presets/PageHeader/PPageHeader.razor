@@ -1,0 +1,99 @@
+﻿@namespace Masa.Blazor.Presets
+
+<div class="m-presets-page-header @Class" style="@Style">
+    <div class="m-presets-page-header--h">
+        @if (OnBack.HasDelegate)
+        {
+            <MButton Icon Class="mr-2" OnClick="HandleOnBack">
+                <MIcon>$goBack</MIcon>
+            </MButton>
+        }
+
+        <span class="m-presets-page-header--h-title" style="margin-right: 8px">
+            @if (TitleFragment != default)
+            {
+                @TitleFragment
+            }
+            else
+            {
+                @Title
+            }
+        </span>
+
+        <span class="m-presets-page-header--h-subtitle">
+            @if (SubtitleFragment != default)
+            {
+                @SubtitleFragment
+            }
+            else
+            {
+                @Subtitle
+            }
+        </span>
+
+        <MSpacer />
+
+        <div class="m-presets-page-header--h-actions">
+            @LeftActions
+
+            @if (LeftActions != null && Filters != null)
+            {
+                <MDivider Vertical Class="ml-3" />
+            }
+
+            @if (Filters != null)
+            {
+                <SlideXReverseTransition>
+                    <ShowTransitionElement Value="ShowFilters">
+                        @RightActions
+
+                        <MTooltip Top>
+                            <ActivatorContent>
+                                <MButton @attributes="context.Attrs" Icon OnClick="HandleOnSearch" Loading="_loading">
+                                    <MIcon>$search</MIcon>
+                                </MButton>
+                            </ActivatorContent>
+                            <ChildContent>
+                                <span>@I18n.T("$masaBlazor.search")</span>
+                            </ChildContent>
+                        </MTooltip>
+                    </ShowTransitionElement>
+                </SlideXReverseTransition>
+
+                @if (ShowFilters)
+                {
+                    <MTooltip Top>
+                        <ActivatorContent>
+                            <MButton @attributes="context.Attrs" Icon OnClick="() => ShowFilters = !ShowFilters">
+                                <MIcon>$filterOff</MIcon>
+                            </MButton>
+                        </ActivatorContent>
+                        <ChildContent>
+                            <span>@I18n.T("$masaBlazor.fold")</span>
+                        </ChildContent>
+                    </MTooltip>
+                }
+                else
+                {
+                    <MTooltip Top>
+                        <ActivatorContent>
+                            <MButton @attributes="context.Attrs" Icon OnClick="() => ShowFilters = !ShowFilters">
+                                <MIcon>$filterOn</MIcon>
+                            </MButton>
+                        </ActivatorContent>
+                        <ChildContent>
+                            <span>@I18n.T("$masaBlazor.unfold")</span>
+                        </ChildContent>
+                    </MTooltip>
+                }
+            }
+        </div>
+    </div>
+
+    <SlideYTransition>
+        <ShowTransitionElement Value="ShowFilters" Class="m-presets-page-header--content">
+            <MDivider Style="margin: 10px 0 16px 0;" />
+            @Filters?.Invoke((HandleOnEnter, HandleOnSearchWithDelay))
+        </ShowTransitionElement>
+    </SlideYTransition>
+</div>

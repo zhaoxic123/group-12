@@ -1,0 +1,121 @@
+﻿@namespace Masa.Blazor.Presets
+
+<MDialog Value="Value"
+         ValueChanged="InternalValueChanged"
+         ContentClass="@($"{StaticClass} {Class}")"
+         MaxWidth="@MaxWidth"
+         Persistent="Persistent"
+         Scrollable
+         Transition="@Transition"
+         Width="@Width"
+         ActivatorContent="@ActivatorContent"
+         @ref="Dialog">
+    <ChildContent>
+        <MCard Class="@ContentClass"
+               Style="@ContentStyle"
+               Elevation="Elevation"
+               Height="@Height">
+            <MCardTitle Class="@HeaderClass" Style="@HeaderStyle">
+                @if (TitleContent != null)
+                {
+                    @TitleContent
+                }
+                else
+                {
+                    @Title
+                }
+                <MSpacer></MSpacer>
+                @if (CloseContent != null)
+                {
+                    @CloseContent(HandleOnCancel)
+                }
+                else
+                {
+                    <MButton Icon OnClick="HandleOnCancel">
+                        <MIcon>$close</MIcon>
+                    </MButton>
+                }
+            </MCardTitle>
+
+            @if (!HideTitleDivider)
+            {
+                <MDivider />
+            }
+
+            <MCardText Class="@BodyClass"
+                       Style="@($"padding: 24px; {BodyStyle}")"
+                       @ref="BodyRef">
+                @if (FormModel == null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    <MForm @ref="Form" Model="FormModel" EnableValidation>
+                        @ChildContent
+                    </MForm>
+                }
+            </MCardText>
+
+            @if (HasActions)
+            {
+                @if (!HideActionsDivider)
+                {
+                    <MDivider />
+                }
+
+                <MCardActions Class="@ActionsClass" Style="@ActionsStyle">
+                    @if (OnDelete.HasDelegate)
+                    {
+                        if (DeleteContent != null)
+                        {
+                            @DeleteContent((HandleOnDelete, Loading))
+                        }
+                        else
+                        {
+                            <ModalButton Props="ComputedDeleteButtonProps"
+                                         OnClick="HandleOnDelete">
+                                @DeleteText
+                            </ModalButton>
+                        }
+                    }
+
+                    <MSpacer />
+
+                    @if (OnCancel.HasDelegate && !HideCancelAction)
+                    {
+                        if (CancelContent != null)
+                        {
+                            @CancelContent((HandleOnCancel, Loading))
+                        }
+                        else
+                        {
+                            <ModalButton Props="ComputedCancelButtonProps"
+                                         Disabled="_saveLoading"
+                                         OnClick="HandleOnCancel">
+                                @CancelText
+                            </ModalButton>
+                        }
+                    }
+
+                    @if (OnSave.HasDelegate)
+                    {
+                        if (SaveContent != null)
+                        {
+                            @SaveContent((HandleOnSave, Loading))
+                        }
+                        else
+                        {
+                            <ModalButton Props="ComputedSaveButtonProps"
+                                         Disabled="_saveLoading"
+                                         Loading="_saveLoading"
+                                         OnClick="HandleOnSave">
+                                @SaveText
+                            </ModalButton>
+                        }
+                    }
+                </MCardActions>
+            }
+        </MCard>
+    </ChildContent>
+</MDialog>

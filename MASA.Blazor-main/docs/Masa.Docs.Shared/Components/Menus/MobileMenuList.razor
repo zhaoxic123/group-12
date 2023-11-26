@@ -1,0 +1,52 @@
+﻿@namespace Masa.Docs.Shared.Components
+@inject I18n I18n
+
+<MNavigationDrawer Value="Value"
+                   ValueChanged="ValueChanged"
+                   Class="pt-2"
+                   Width="240"
+                   Right
+                   Fixed
+                   Floating
+                   Temporary>
+    <MList Nav>
+        <MListItemGroup>
+            @foreach (var item in AppService.GetNavMenus(Project))
+            {
+                <MListItem Href="@item.Href" Target="@item.Target">
+                    <MListItemContent>
+                        <MListItemTitle>
+                            <MBadge Color="@item.StateBackgroundColor" Content="@I18n.T(item.State)" Value="@(!string.IsNullOrWhiteSpace(item.State))">
+                                @I18n.T(item.Title)
+                            </MBadge>
+                        </MListItemTitle>
+                    </MListItemContent>
+                </MListItem>
+            }
+            <MDivider />
+            <MListItem Href="https://github.com/masastack/MASA.Blazor" Target="_blank">
+                <MListItemContent>
+                    <MListItemTitle>Github</MListItemTitle>
+                </MListItemContent>
+            </MListItem>
+            <MListItem Href="https://gitee.com/blazorcomponent/MASA.Blazor" Target="_blank">
+                <MListItemContent>
+                    <MListItemTitle>Gitee</MListItemTitle>
+                </MListItemContent>
+            </MListItem>
+        </MListItemGroup>
+    </MList>
+</MNavigationDrawer>
+
+@code {
+
+    [CascadingParameter(Name = "project")]
+    public string? Project { get; set; }
+
+    [Parameter]
+    public bool? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<bool?> ValueChanged { get; set; }
+
+}
